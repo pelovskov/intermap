@@ -22,9 +22,34 @@ python3 -m http.server 8000
 
 Åbn derefter http://localhost:8000. (Service worker og GPS virker på `localhost` og over HTTPS.)
 
-## Tilføj eller ret punkter
+## Redigér punkter: editoren
 
-Alt indhold ligger i [`data/points.json`](data/points.json):
+Åbn **`editor.html`**, fx `https://pelovskov.github.io/intermap/editor.html`. Siden er ikke linket fra appen.
+
+- **＋ Nyt punkt**: tryk på knappen og klik derefter på kortet, hvor punktet skal stå.
+- Klik på et punkt (på kortet eller i listen) for at rette titel og tekst. **Træk i markøren** for at flytte punktet.
+- **Vælg billede …**: billedet bliver automatisk gjort mindre (max 1200 px) og gemt som WebP. Brug gerne et billede direkte fra telefonen.
+- ▲/▼ ændrer rækkefølgen, altså numrene på kortet.
+- Under *Kortindstillinger* kan du ændre titel, standardradius, startpunkt og kortområde.
+
+Der er to måder at gemme på:
+
+1. **⬇ Download ZIP**: du får `data/points.json` og de nye billeder. Pak ZIP-filen ud i repoets rodmappe og commit/upload.
+2. **⬆ Udgiv på GitHub**: editoren committer selv direkte til `main`. Kortet er opdateret efter cirka 1 minut.
+   Første gang skal du bruge en *fine-grained personal access token*:
+   GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → *Generate new token*
+   - *Repository access*: **Only select repositories** → `intermap`
+   - *Permissions* → *Repository permissions* → **Contents: Read and write**
+   - Vælg en udløbsdato, fx 1 år.
+
+   Nøglen gemmes kun i den browser, du bruger. Tryk på ⚙ → *Glem nøgle* for at fjerne den.
+   Er `points.json` blevet ændret på GitHub, siden du åbnede editoren, bliver du spurgt, før noget overskrives.
+
+Billeder, der ikke længere bruges, bliver liggende i `img/`. De kan slettes på GitHub, når det passer dig.
+
+## Dataformatet
+
+Alt indhold ligger i [`data/points.json`](data/points.json). Filen kan også rettes i hånden:
 
 ```json
 {
@@ -43,7 +68,7 @@ Alt indhold ligger i [`data/points.json`](data/points.json):
 - `map.nearbyRadius` er standardradius for "Her er jeg".
 
 Når du ændrer filer i appen (css/js/html), skal du hæve `VERSION` i [`sw.js`](sw.js). Så får brugerne en "Ny version klar"-besked.
-Ændringer i `points.json` hentes automatisk, når der er net.
+Ændringer i `points.json` og nye billeder hentes automatisk, næste gang appen åbnes med net. Det kræver ingen ny version.
 
 ## Udgiv på GitHub Pages
 
@@ -64,6 +89,7 @@ og lægge den ind i appen. Så kan hele kortet hentes med én knap uden at belas
 index.html            Side + layout
 css/app.css           Udseende
 js/app.js             Kort, markører, modal, GPS
+editor.html           Redigering af punkter (js/editor.js, js/zip.js, css/editor.css)
 sw.js                 Service worker (offline)
 data/points.json      Punkter og kortindstillinger
 manifest.webmanifest  PWA-manifest
