@@ -1,11 +1,23 @@
 {
   "map": {
     "title": "Roskilde centrum",
-    "center": [55.6425, 12.0803],
+    "center": [
+      55.6425,
+      12.0803
+    ],
     "zoom": 16,
     "minZoom": 14,
     "maxZoom": 19,
-    "bounds": [[55.6305, 12.0600], [55.6545, 12.1010]],
+    "bounds": [
+      [
+        55.6305,
+        12.06
+      ],
+      [
+        55.6545,
+        12.101
+      ]
+    ],
     "nearbyRadius": 250
   },
   "points": [
@@ -15,12 +27,12 @@
       "lat": 55.6425,
       "lng": 12.0803,
       "image": "",
-      "text": "Kort introtekst om Domkirken. Her kan der stå lidt historie, fx om kongegravene og byggeriet i 1100-1200-tallet. (Eksempeltekst)"
+      "text": "Kort introtekst om Domkirken. Her kan der stå lidt historie, fx om kongegravene og byggeriet i 1100-1200-tallet. (Eksempeltekst) - det er meget fint"
     },
     {
       "id": "palae",
       "title": "Roskilde Palæ",
-      "lat": 55.6420,
+      "lat": 55.642,
       "lng": 12.0818,
       "image": "",
       "text": "Eksempeltekst: Palæet ved Stændertorvet. Erstat med din egen tekst og et billede."
@@ -37,7 +49,7 @@
       "id": "museum",
       "title": "Roskilde Museum",
       "lat": 55.6411,
-      "lng": 12.0840,
+      "lng": 12.084,
       "image": "",
       "text": "Eksempeltekst: Museum om byens historie."
     },
@@ -52,7 +64,7 @@
     {
       "id": "station",
       "title": "Roskilde Station",
-      "lat": 55.6390,
+      "lat": 55.639,
       "lng": 12.0889,
       "image": "",
       "text": "Eksempeltekst: Banegården – et oplagt startpunkt for en byvandring."
@@ -77,7 +89,7 @@
       "id": "sct-joergensbjerg",
       "title": "Sankt Jørgensbjerg Kirke",
       "lat": 55.6493,
-      "lng": 12.0700,
+      "lng": 12.07,
       "image": "",
       "text": "Eksempeltekst: Lille middelalderkirke i det gamle fiskerkvarter."
     },
@@ -85,7 +97,7 @@
       "id": "vikingeskibsmuseet",
       "title": "Vikingeskibsmuseet",
       "lat": 55.6507,
-      "lng": 12.0790,
+      "lng": 12.079,
       "image": "",
       "text": "Eksempeltekst: Museet ved fjorden med de fem Skuldelev-skibe."
     }
