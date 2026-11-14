@@ -61,6 +61,7 @@
 
     setupNetStatus();
     registerSW();
+    cacheImages();
     if (new URLSearchParams(location.search).has('demo')) simulatePosition();
   }
 
@@ -236,6 +237,18 @@
     window.addEventListener('online', upd);
     window.addEventListener('offline', upd);
     upd();
+  }
+
+  // Gem alle punktbilleder med det samme, så de også virker offline uden at være åbnet først.
+  async function cacheImages() {
+    if (!('caches' in window) || !navigator.onLine) return;
+    try {
+      const cache = await caches.open('intermap-img');
+      const urls = points.map((p) => p.image).filter(Boolean);
+      for (const u of urls) {
+        if (!(await caches.match(u))) await cache.add(u).catch(() => {});
+      }
+    } catch (e) { /* ikke kritisk */ }
   }
 
   function registerSW() {

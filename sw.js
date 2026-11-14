@@ -1,7 +1,8 @@
 /* Service worker: gemmer appen til offline brug + kortfliser man har set. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const APP_CACHE = 'intermap-app-' + VERSION;
 const TILE_CACHE = 'intermap-tiles';   // beholdes på tværs af versioner
+const IMG_CACHE = 'intermap-img';      // punktbilleder (fyldes af appen), beholdes på tværs af versioner
 const MAX_TILES = 3000;
 
 const APP_FILES = [
@@ -53,14 +54,14 @@ self.addEventListener('fetch', (e) => {
 
   if (url.origin !== self.location.origin) return;
 
-  // Punktdata: prøv nettet først, så rettelser slår igennem; fald tilbage til cache.
+  // Punktdata: prøv nettet først (uden om browserens HTTP-cache), så rettelser slår igennem; fald tilbage til cache.
   if (url.pathname.endsWith('/data/points.json')) {
     e.respondWith(
-      fetch(req).then((res) => {
+      fetch(req.url, { cache: 'no-cache' }).then((res) => {
         const copy = res.clone();
-        caches.open(APP_CACHE).then((c) => c.put(req, copy));
+        if (res.ok) caches.open(APP_CACHE).then((c) => c.put(req.url, copy));
         return res;
-      }).catch(() => caches.match(req))
+      }).catch(() => caches.match(req.url, { ignoreSearch: true }))
     );
     return;
   }
@@ -70,7 +71,7 @@ self.addEventListener('fetch', (e) => {
     caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req).then((res) => {
       if (res.ok && url.pathname.includes('/img/')) {
         const copy = res.clone();
-        caches.open(APP_CACHE).then((c) => c.put(req, copy));
+        caches.open(IMG_CACHE).then((c) => c.put(req, copy));
       }
       return res;
     }).catch(() => (req.mode === 'navigate' ? caches.match('index.html') : Response.error())))
