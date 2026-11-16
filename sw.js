@@ -1,5 +1,5 @@
 /* Service worker: gemmer appen til offline brug + kortfliser man har set. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const APP_CACHE = 'intermap-app-' + VERSION;
 const TILE_CACHE = 'intermap-tiles';   // beholdes på tværs af versioner
 const IMG_CACHE = 'intermap-img';      // punktbilleder (fyldes af appen), beholdes på tværs af versioner
@@ -23,6 +23,8 @@ const APP_FILES = [
   'vendor/leaflet/images/marker-shadow.png',
   'vendor/leaflet/images/layers.png',
   'vendor/leaflet/images/layers-2x.png',
+  'vendor/markercluster/leaflet.markercluster.js',
+  'vendor/markercluster/MarkerCluster.css',
 ];
 
 self.addEventListener('install', (e) => {

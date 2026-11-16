@@ -57,6 +57,7 @@
 
     $('#m-title').addEventListener('input', (e) => { data.map.title = e.target.value; markDirty(); });
     $('#m-radius').addEventListener('change', (e) => { data.map.nearbyRadius = clampInt(e.target.value, 50, 1000, 250); markDirty(); renderMapSettings(); });
+    $('#m-cluster').addEventListener('change', (e) => { data.map.cluster = e.target.checked; markDirty(); });
     $('#m-center').addEventListener('click', () => {
       const c = map.getCenter();
       data.map.center = [round(c.lat, 5), round(c.lng, 5)];
@@ -144,6 +145,7 @@
     const m = data.map;
     if (document.activeElement !== $('#m-title')) $('#m-title').value = m.title || '';
     $('#m-radius').value = m.nearbyRadius || 250;
+    $('#m-cluster').checked = m.cluster !== false;
     $('#m-info').textContent = `Startpunkt ${m.center[0]}, ${m.center[1]} · zoom ${m.zoom}. Det stiplede rektangel er kortområdet.`;
   }
 
