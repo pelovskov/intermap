@@ -37,6 +37,7 @@ input[type=text], input[type=number], input[type=password], textarea {
   padding: 7px 9px; border: 1px solid #cfd4da; border-radius: 7px;
 }
 textarea { resize: vertical; }
+label.check { display: flex; align-items: center; gap: 8px; color: #1d2329; font-size: 14px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
 .row.wrap { flex-wrap: wrap; }

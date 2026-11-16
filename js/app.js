@@ -7,6 +7,7 @@
 
   let map, cfg, points = [];
   const markers = new Map();      // id -> L.Marker
+  let layer;                      // klyngegruppe (eller almindelig lagdeling, hvis klynger er slået fra)
   let meMarker = null, meAccuracy = null, nearCircle = null;
   let myPos = null;               // L.LatLng
   let watchId = null;
@@ -45,12 +46,24 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-bidragydere',
     }).addTo(map);
 
+    // Klynger: tætte markører samles i en cirkel med et tal. Fra zoom 18 vises alle enkeltvis.
+    layer = cfg.cluster === false || !L.markerClusterGroup
+      ? L.layerGroup()
+      : L.markerClusterGroup({
+        maxClusterRadius: 40,
+        disableClusteringAtZoom: 18,
+        showCoverageOnHover: false,
+        iconCreateFunction: clusterIcon,
+      });
+    layer.addTo(map);
+
     points.forEach((p, i) => {
       const m = L.marker([p.lat, p.lng], { icon: poiIcon(i + 1, ''), title: p.title, keyboard: true })
-        .addTo(map)
         .on('click', () => openModal(p));
       m._idx = i + 1;
+      m._state = '';
       markers.set(p.id, m);
+      layer.addLayer(m);
     });
 
     $('#btn-locate').addEventListener('click', locate);
@@ -63,6 +76,29 @@
     registerSW();
     cacheImages();
     if (new URLSearchParams(location.search).has('demo')) simulatePosition();
+  }
+
+  function setState(m, state) {
+    m._state = state;
+    m.setIcon(poiIcon(m._idx, state));
+  }
+
+  function refreshClusters() {
+    if (layer.refreshClusters) layer.refreshClusters();
+  }
+
+  function clusterIcon(cluster) {
+    const kids = cluster.getAllChildMarkers();
+    const n = kids.length;
+    const near = kids.filter((m) => m._state === 'near').length;
+    const allFar = kids.every((m) => m._state === 'far');
+    const size = n < 10 ? 36 : 42;
+    return L.divIcon({
+      className: '',
+      html: `<div class="poi-cluster ${near ? 'near' : ''} ${allFar ? 'far' : ''}"><span>${n}</span></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+    });
   }
 
   function poiIcon(n, state) {
@@ -173,7 +209,8 @@
     const near = withDist.filter((x) => x.d <= radius).sort((a, b) => a.d - b.d);
     const nearIds = new Set(near.map((x) => x.p.id));
 
-    markers.forEach((m, id) => m.setIcon(poiIcon(m._idx, nearIds.has(id) ? 'near' : 'far')));
+    markers.forEach((m, id) => setState(m, nearIds.has(id) ? 'near' : 'far'));
+    refreshClusters();
 
     const list = $('#nearby-list');
     list.innerHTML = '';
@@ -202,7 +239,8 @@
   function clearNearby() {
     $('#nearby').hidden = true;
     if (nearCircle) { nearCircle.remove(); nearCircle = null; }
-    markers.forEach((m) => m.setIcon(poiIcon(m._idx, '')));
+    markers.forEach((m) => setState(m, ''));
+    refreshClusters();
   }
 
   function fmtDist(m) {
